@@ -266,7 +266,18 @@ window.Transit = (function($, _, window, undefined) {
                   maybe (rush_hour([15, 00], [21, 00], summer(fridays), OUTBOUND)),
                   maybe (summer(saturdays)),
                   always
-                ))
+                )),
+    bidi_system("NJ Transit Trains", conditions(
+                  // NJT defines "Major Holiday", then includes "the
+                  // day prior to a holiday." Do they really mean the
+                  // Sunday before Memorial and Labor days?
+                  reject(holiday(Holidays.NEW_YEAR, Holidays.MEMORIAL, Holidays.JULY_3, Holidays.JULY_4, Holidays.LABOR, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_EVE, Holidays.CHRISTMAS, Holidays.NEW_YEAR_EVE)),
+                  accept(weekend),
+                  reject(rush_hour([ 6, 00], [10, 00]), INBOUND),
+                  reject(rush_hour([16, 00], [17, 00]), OUTBOUND),
+                  always
+                )),
+    trivial_system("NJ Transit Buses", maybe(always))
   ],
 
   // allow to quickly get a transit system by its slug
