@@ -194,7 +194,7 @@ p {
     margin: 0px 1em;
 }
 
-h2.result-h {
+h2#result-h {
     text-align: center;
     font-size: 200%;
     color: rgb(104, 1, 72);

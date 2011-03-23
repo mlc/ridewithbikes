@@ -11,8 +11,6 @@ window.Transit = (function($, _, window, undefined) {
 
   var History = window.History;
 
-  var INBOUND = 'inbound', OUTBOUND = 'outbound';
-
   // some functions which return functions, hooray.
   // reject, accept, maybe are similar enough that we could probably DRY them
   var reject = function(condition, fdir) {
@@ -200,22 +198,57 @@ window.Transit = (function($, _, window, undefined) {
     summer: summer
   };
 
+  // this is sort of a type system, but a very simple one.
   var System = (function() {
+    var compute = function(date) {
+      var results = this.states(date), groupedresults = {};
+      _(results).each(function(k, v) {
+        if (_.isArray(groupedresults[k])) {
+          groupedresults[k].push(v);
+        } else {
+          groupedresults[k] = [v];
+        }
+      });
+
+      switch(_(groupedresults).size()) {
+      case 0:
+        throw 'wtf? no results?';
+        break;
+      case 1:
+        return _(groupedresults).keys()[0];
+
+      default:
+        return groupedresults;
+      }
+    };
+
     var base_sys = function(name, icon, f) {
       return {
         name: name,
         available: f,
         icon: icon,
-        slug: name.slugify()
+        slug: name.slugify(),
+        compute: compute
       };
     };
 
     return {
       trivial: function() {
-        return base_sys.apply(this, arguments);
+        var that = base_sys.apply(this, arguments);
+        that.states = function(date) {
+          return { all: this.available(date) };
+        };
+        return that;
       },
       bidi: function() {
-        return base_sys.apply(this, arguments);
+        var that = base_sys.apply(this, arguments);
+        that.states = function(date) {
+          return {
+            inbound: this.available(date, 'inbound'),
+            outbound: this.available(date, 'outbound')
+          };
+        };
+        return that;
       }
     };
   }());
@@ -237,19 +270,19 @@ window.Transit = (function($, _, window, undefined) {
                    )),
     System.bidi("Metro-North", "train", conditions(
                   reject(holiday(Holidays.NEW_YEAR, Holidays.ST_PATRICK, Holidays.MOTHER, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.CHRISTMAS_EVE, Holidays.NEW_YEAR_EVE)),
-                  reject(rush_hour([12, 00], [20, 30], holiday(Holidays.MEMORIAL_FRI, Holidays.JULY_3, Holidays.LABOR_FRI)), OUTBOUND),
+                  reject(rush_hour([12, 00], [20, 30], holiday(Holidays.MEMORIAL_FRI, Holidays.JULY_3, Holidays.LABOR_FRI)), 'outbound'),
                   accept(weekend),
-                  reject(rush_hour([16, 00], [20, 00]), OUTBOUND),
-                  reject(rush_hour([ 5, 30], [12, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), OUTBOUND),
-                  reject(rush_hour([15, 00], [20, 30], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), OUTBOUND),
-                  maybe (rush_hour([ 5, 30], [ 9, 00]), OUTBOUND),
-                  maybe (rush_hour([15, 00], [16, 00]), OUTBOUND),
-                  maybe (rush_hour([20, 00], [20, 15]), OUTBOUND),
+                  reject(rush_hour([16, 00], [20, 00]), 'outbound'),
+                  reject(rush_hour([ 5, 30], [12, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), 'outbound'),
+                  reject(rush_hour([15, 00], [20, 30], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), 'outbound'),
+                  maybe (rush_hour([ 5, 30], [ 9, 00]), 'outbound'),
+                  maybe (rush_hour([15, 00], [16, 00]), 'outbound'),
+                  maybe (rush_hour([20, 00], [20, 15]), 'outbound'),
                   // inbound is arrival time at GCT, not departure time, ick.
-                  reject(rush_hour([ 5, 00], [10, 00]), INBOUND),
+                  reject(rush_hour([ 5, 00], [10, 00]), 'inbound'),
                   // "and on other trains identified in Metro-North timetables"
-                  reject(rush_hour([ 5, 00], [12, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), INBOUND),
-                  reject(rush_hour([16, 00], [20, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), INBOUND),
+                  reject(rush_hour([ 5, 00], [12, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), 'inbound'),
+                  reject(rush_hour([16, 00], [20, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), 'inbound'),
                   always
                 )),
     System.bidi("Long Island Rail Road", "train", conditions(
@@ -260,14 +293,14 @@ window.Transit = (function($, _, window, undefined) {
                   // 'Ride to Montauk' annual events."
 
                   // inbound arrival times are at Penn Sta., ick.
-                  reject(rush_hour([ 6, 00], [10, 00], weekday),   INBOUND),
-                  reject(rush_hour([15, 00], [20, 00], weekday),   OUTBOUND),
-                  reject(rush_hour([ 7, 00], [10, 00], saturdays), INBOUND),
-                  reject(rush_hour([16, 00], [18, 00], saturdays), OUTBOUND),
-                  reject(rush_hour([17, 00], [20, 00], sundays),   INBOUND),
-                  reject(rush_hour([22, 00], [24, 00], sundays),   OUTBOUND),
-                  maybe (rush_hour([18, 00], [22, 00], summer(sundays), INBOUND)),
-                  maybe (rush_hour([15, 00], [21, 00], summer(fridays), OUTBOUND)),
+                  reject(rush_hour([ 6, 00], [10, 00], weekday),   'inbound'),
+                  reject(rush_hour([15, 00], [20, 00], weekday),   'outbound'),
+                  reject(rush_hour([ 7, 00], [10, 00], saturdays), 'inbound'),
+                  reject(rush_hour([16, 00], [18, 00], saturdays), 'outbound'),
+                  reject(rush_hour([17, 00], [20, 00], sundays),   'inbound'),
+                  reject(rush_hour([22, 00], [24, 00], sundays),   'outbound'),
+                  maybe (rush_hour([18, 00], [22, 00], summer(sundays), 'inbound')),
+                  maybe (rush_hour([15, 00], [21, 00], summer(fridays), 'outbound')),
                   maybe (summer(saturdays)),
                   always
                 )),
@@ -277,8 +310,8 @@ window.Transit = (function($, _, window, undefined) {
                   // Sunday before Memorial and Labor days?
                   reject(holiday(Holidays.NEW_YEAR, Holidays.MEMORIAL, Holidays.JULY_3, Holidays.JULY_4, Holidays.LABOR, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_EVE, Holidays.CHRISTMAS, Holidays.NEW_YEAR_EVE)),
                   accept(weekend),
-                  reject(rush_hour([ 6, 00], [10, 00]), INBOUND),
-                  reject(rush_hour([16, 00], [17, 00]), OUTBOUND),
+                  reject(rush_hour([ 6, 00], [10, 00]), 'inbound'),
+                  reject(rush_hour([16, 00], [19, 00]), 'outbound'),
                   always
                 )),
     System.trivial("NJ Transit Buses", "bus", maybe(always))
@@ -308,6 +341,17 @@ window.Transit = (function($, _, window, undefined) {
     }
   };
 
+  var friendlyString = function(obj) {
+    switch(obj) {
+    case 'true':
+      return 'Yes';
+    case 'false':
+      return 'No';
+    default:
+      return obj;
+    }
+  };
+
   var setsystem = function(slug, fade) {
     var $result = $("#result"), $getstarted = $("#getstarted");
     $result.hide();
@@ -326,14 +370,37 @@ window.Transit = (function($, _, window, undefined) {
       return;
     }
 
-    var when = new Date(), avail = system.available(when);
-    $(".result-h, .result-notes, .method-icon, .result-icon").hide();
-    $(".result-" + avail).show();
-    $("#icon-" + system.icon).show();
-
-    $("#notes-" + slug).show();
-    $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
+    var when = new Date(), results = system.compute(when), avail;
+    $(".result-notes, .method-icon, .result-icon").hide();
     $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));
+    $("#icon-" + system.icon).show();
+    $("#notes-" + slug).show();
+
+    if (typeof results === 'object') {
+      if (_(results['true']).include('inbound')) {
+          $(".result-inbound").show();
+      }
+      if (_(results['true']).include('outbound')) {
+          $(".result-outbound").show();
+      }
+      if (results.maybe) {
+        $("#" + slug + "-maybe").show();
+        $(".result-maybe").show();
+        if (results['true']) {
+          $("#result-h").text(results['true'].join(', ') + " ok; maybe " + results['maybe'].join(', '));
+        } else {
+          $("#result-h").text("maybe " + results['maybe'].join(', ') + "; " + results['false'].join(', ') + " not ok");
+        }
+      } else {
+        $("#" + slug + "-maybe").hide();
+        $("#result-h").text(results['true'].join(', ') + " ok, but not " + results['false'].join(', '));
+      }
+    } else {
+      // just one status!
+      $(".result-" + results).show();
+      $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
+      $("#result-h").text(friendlyString(results));
+    }
 
     $getstarted.hide();
     if (fade) {
