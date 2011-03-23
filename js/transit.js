@@ -322,9 +322,6 @@ window.Transit = (function($, _, window, undefined) {
       return;
     }
 
-    if (fade === undefined)
-      fade = true;
-
     var when = new Date(), avail = system.available(when);
     $(".result-h").hide();
     $("#result-" + avail).show();
@@ -335,7 +332,11 @@ window.Transit = (function($, _, window, undefined) {
     $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));
 
     $getstarted.hide();
-    $result.fadeIn('slow');
+    if (fade) {
+      $result.fadeIn('slow');
+    } else {
+      $result.show();
+    }
   };
 
   $(function() {
@@ -346,14 +347,17 @@ window.Transit = (function($, _, window, undefined) {
       $select.append($("<option/>", {text: system.name, value: system.slug}));
     });
 
-    $select.bind("click change", function() {
+    $select.bind("change", function() {
       setstateforsystem($select.val());
     });
 
     $(window).bind("statechange", function() {
-      var state = History.getState();
-      setsystem(state.data ? state.data.system : undefined);
+      var state = History.getState(), system = state.data ? state.data.system : undefined;
+      $select.val(system || '');
+      setsystem(system, true);
     });
+
+    History.getState(); // called for its side effects.
   });
 
   return that;
