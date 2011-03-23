@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ride with Bikes</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/modernizr-1.7.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="container">
+      <header>
+        <h1>Ride with Bikes</h1>
+      </header>
+      <div id="main" role="main">
+        <p>This website will help you understand if you can take your bike on the various transit systems in and around New York City.</p>
+        <p class="noscript">Sorry, but this site requires you to <a href="http://enable-javascript.com/">enable JavaScript</a> in order to function properly.</p>
+        <div class="jsonly">
+          <p id="getstarted">To get started, select the transit system you want to use:</p>
+          <form>
+            <p id="transitsystemp">
+              Can I take my bike on
+              <select id="transitsystem">
+                <option value='' selected>…</option>
+              </select>
+              at
+              <input id="when" value="now" title="Try 'now', 'tomorrow 7:08 AM', 'last Thursday noon', etc."/>?
+            </p>
+          </form>
+        </div>
+        <section id="result">
+          <header>
+            <h2 class="result-h" id="result-true">Yes</h2>
+            <h2 class="result-h" id="result-false">No</h2>
+            <h2 class="result-h" id="result-maybe">Check the Schedule</h2>
+            <p id="date-time"></p>
+          </header>
+
+          <section class="result-notes" id="notes-nyc-subway">
+            <p>You can always take your bike on the subway!</p>
+            <p>Be considerate: avoid rush hour if you can, use the ends of the cars, and see <a href="http://mta.info/nyct/safety/bike/index.html">the MTA's page</a> for more advice.</p>
+          </section>
+
+          <section class="result-notes" id="notes-nyc-bus">
+            <p>Sorry, except for folding bikes, bikes are not allowed on NYC buses.</p>
+          </section>
+
+          <section class="result-notes" id="notes-amtrak">
+            <p>Bikes may be checked on trains offering checked baggage service (no trains on the Northeast Corridor service do). Otherwise, only folding bikes are allowed. Read <a href="http://transalt.org/files/resources/amtrak_policy_07.pdf">Amtrak's policy</a>.</p>
+          </section>
+
+          <section class="result-notes" id="notes-path">
+            <p>Folding bikes are allowed at all times; other bikes are forbidden on weekdays between 6:30&nbsp;AM and 9:30&nbsp;AM and between 3:30&nbsp;PM and 6:30&nbsp;PM. Two bikes are allowed in each car, except that no bikes are allowed in the first car of a train.</p>
+            <p>For further information and rules, see <a href="http://www.panynj.gov/path/bicycles.html">PATH's website</a>.</p>
+          </section>
+
+          <section class="result-notes" id="notes-metro-north">
+            <!-- OMGLOLWUT? -->
+            <p id="metro-north-maybe">Some trains at this time allow bicycles, while others do not; consult your line's schedule for details.</p>
+            <p>To bring any bike (except a folding bike) on the train, you must first obtain a <a href="http://www.mta.info/mnr/html/mnrbikepermit.htm"><abbr title="Metro-North Railroad">MNR</abbr> Bicycle Permit</a>.</p>
+            <p>Bikes are forbidden on peak-hour trains and on certain holidays. At other times, two bikes are allowed in each of two cars on each train. Even when bikes are generally allowed, it is at the discretion of the train crew.</p>
+            <p>There are a number of additional rues and considerations; see <a href="http://www.mta.info/mnr/html/getaways/bikerule.htm"><abbr>MNR</abbr>'s website</a> for more details.</p>
+          </section>
+
+          <section class="result-notes" id="notes-long-island-rail-road">
+            <p id="long-island-rail-road-maybe">At this time, bikes are forbidden on the Montauk branch (except for special Bike Trains) but allowed on all other lines.</p>
+            <p>To bring any bike (except a folding bike) on the train, you must obtain a <a href="http://www.mta.info/lirr/about/Bicycles/BicyclePermit.htm"><abbr title="Long Island Rail Road">LIRR</abbr> Bicycle Permit</a> either in advance or on board.</p>
+            <p>Bikes are forbidden on peak-hour trains and on certain holidays. At other times on weekdays, four bikes are allowed on each train, two in each of the first and the last car; at non-peak times on weekends, one bike is allowed in each car, up to a total of eight per train.</p>
+            <p>Bikes are also forbidden during track work and special events.</p>
+            <p>There are a number of additional rules and considerations; see <a href="http://www.mta.info/lirr/about/Bicycles/">the <abbr>LIRR</abbr>'s website</a> for more details.</p>
+          </section>
+        </section>
+      </div>
+      <footer>
+        <p>
+          <a href="http://twitter.com/share" class="twitter-share-button" data-text="Ride with Bikes: learn if you can take your #bikenyc on public transit" data-count="horizontal" data-related="vermicelli" data-url="http://ridewithbikes.com/">Tweet</a>
+        </p>
+        <p>This website by <a href="http://mlcastle.net/">mike castleman</a> (<a href="http://twitter.com/vermicelli">@vermicelli</a>).</p>
+        <p>Data mostly from <a href="http://transalt.org/resources/aboard">Transportation Alternatives</a>. I'll try to keep this accurate and up-to-date, but make no guarantees.</p>
+        <p>Inspired by <a href="http://www.stevevance.net/metra/">Can I bring my bike on Metra right now?</a></p>
+        <p>Powered by <a href="http://www.datejs.com/">date.js</a>, <a href="http://html5boilerplate.com/">HTML5 Boilerplate</a>, <a href="http://jquery.org/">jQuery</a>, <a href="http://www.theleagueofmoveabletype.com/fonts/1-junction">Junction</a>, <a href="http://www.modernizr.com/">Modernizr</a>, <a href="http://documentcloud.github.com/underscore/">underscore</a>.</p>
+      </footer>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+    <script>window.jQuery || document.write('\x3cscript src="js/jquery-1.5.1.min.js">\x3C/script>')</script>
+    <script type="text/javascript">
+      if ( typeof JSON === 'undefined' ) {
+        var scriptEl = document.createElement('script');
+        scriptEl.src = 'js/json2.js';
+        document.body.appendChild(scriptEl);
+      }
+    </script>
+    <!-- TODO: minify and concatenate -->
+    <script src="js/underscore.js"></script>
+    <script src="js/date.js"></script>
+    <script src="js/history.adapter.jquery.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/history.html4.js"></script>
+    <script src="js/transit.js"></script>
+
+    <script>
+      var _gaq = [['_setAccount', 'UA-22213633-1'], ['_trackPageview']];
+      (function(d, t) {
+        var s = d.getElementsByTagName(t)[0];
+        _(['http://www.google-analytics.com/ga.js', 'http://platform.twitter.com/widgets.js']).each(function(u) {
+          var g = d.createElement(t);
+          g.async = 'async';
+          g.src = u;
+          s.parentNode.insertBefore(g, s);
+        });
+      }(document, 'script'));
+    </script>
+  </body>
+</html>
