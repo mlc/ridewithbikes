@@ -64,10 +64,11 @@ $(function() {
     check_holiday('MEMORIAL_FRI', "May 28, 2012", false);
   });
 
-  // KNOWN TO FAIL
+  // Friday before 1st Monday in Sep is sometimes in Aug!
   test("Friday before Labor Day", function() {
     check_holiday('LABOR_FRI', "Sep 2, 2011", true);
-    check_holiday('LABOR_FRI', "Aug 31, 2012", true); // ICK ICK ICK
+    check_holiday('LABOR_FRI', "Aug 31, 2012", true);
+    check_holiday('LABOR_FRI', "Aug 28, 2015", false);
     check_holiday('LABOR_FRI', "Sep 7, 2012", false);
   });
 

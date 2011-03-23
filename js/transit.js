@@ -74,8 +74,14 @@ window.Transit = (function($, _, window, undefined) {
         last_possible  = week*7 + offset;
       }
       return function(date) {
-        var day = date.getDate();
-        return (date.getMonth() === month && date.getDay() === dow && day >= first_possible && day <= last_possible);
+        var day = date.getDate(), test_month = date.getMonth(), test_dow = date.getDay(),
+        usual_result = (test_month === month && test_dow === dow && day >= first_possible && day <= last_possible);
+        if (first_possible < 0) {
+          // only works for 31-day months, which is all we need so far.
+          return usual_result || (test_dow === dow && test_month === (month-1) && day >= (first_possible + 31));
+        } else {
+          return usual_result;
+        }
       };
     },
     lunar = function() {
@@ -98,9 +104,9 @@ window.Transit = (function($, _, window, undefined) {
       MEMORIAL_FRI:     month_week_dow(Date.MAY, -1, Date.FRIDAY, -3),
       MEMORIAL:         month_week_dow(Date.MAY, -1, Date.MONDAY),
       // MNR says "the day or weekend before Independence Day". WTF?
+      // BUG: LIRR says "the weekday before Independence Day".
       JULY_3:           month_day(Date.JULY, 3),
       JULY_4:           month_day(Date.JULY, 4),
-      // BUG: sometimes (e.g., 2012-2014) this is in august.
       LABOR_FRI:        month_week_dow(Date.SEPTEMBER, 1, Date.FRIDAY, -3),
       LABOR:            month_week_dow(Date.SEPTEMBER, 1, Date.MONDAY),
       EREV_ROSH:        lunar("9/18/2009", "9/8/2010", "9/28/2011", "9/16/2012", "9/4/2013", "9/24/2014"),
