@@ -185,9 +185,13 @@ p {
     background-color: rgba(255, 255, 255, 0.6);
 }
 
-#result header {
+#result header, #icons {
     text-align: center;
     margin-bottom: 4ex;
+}
+
+.icon {
+    margin: 0px 1em;
 }
 
 h2.result-h {

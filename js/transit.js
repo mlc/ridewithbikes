@@ -200,28 +200,32 @@ window.Transit = (function($, _, window, undefined) {
     summer: summer
   };
 
-  var trivial_system = function(name, f) {
-    return {
-      name: name,
-      available: f,
-      slug: name.slugify()
+  var System = (function() {
+    var base_sys = function(name, icon, f) {
+      return {
+        name: name,
+        available: f,
+        icon: icon,
+        slug: name.slugify()
+      };
     };
-  };
 
-  var bidi_system = function(name, f) {
     return {
-      name: name,
-      available: f,
-      slug: name.slugify()
+      trivial: function() {
+        return base_sys.apply(this, arguments);
+      },
+      bidi: function() {
+        return base_sys.apply(this, arguments);
+      }
     };
-  };
+  }());
 
   // OK! Define the systems we know about
   var TRANSIT_SYSTEMS = [
-    trivial_system("NYC Subway", always),
-    trivial_system("NYC Bus", never),
-    trivial_system("Amtrak", never),
-    trivial_system("PATH", conditions(
+    System.trivial("NYC Subway", "train", always),
+    System.trivial("NYC Bus", "bus", never),
+    System.trivial("Amtrak", "train", never),
+    System.trivial("PATH", "train", conditions(
                      accept(weekend),
                      // transalt says ok on holidays. path website is unclear.
                      // let's assume that "weekdays" does not include those
@@ -231,7 +235,7 @@ window.Transit = (function($, _, window, undefined) {
                      reject(rush_hour([15, 30], [18, 30])),
                      always
                    )),
-    bidi_system("Metro-North", conditions(
+    System.bidi("Metro-North", "train", conditions(
                   reject(holiday(Holidays.NEW_YEAR, Holidays.ST_PATRICK, Holidays.MOTHER, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.CHRISTMAS_EVE, Holidays.NEW_YEAR_EVE)),
                   reject(rush_hour([12, 00], [20, 30], holiday(Holidays.MEMORIAL_FRI, Holidays.JULY_3, Holidays.LABOR_FRI)), OUTBOUND),
                   accept(weekend),
@@ -248,7 +252,7 @@ window.Transit = (function($, _, window, undefined) {
                   reject(rush_hour([16, 00], [20, 00], holiday(Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_WEEK)), INBOUND),
                   always
                 )),
-    bidi_system("Long Island Rail Road", conditions(
+    System.bidi("Long Island Rail Road", "train", conditions(
                   reject(holiday(Holidays.NEW_YEAR, Holidays.ST_PATRICK, Holidays.MOTHER, Holidays.GOOD_FRIDAY, Holidays.EASTER, Holidays.MEMORIAL_FRI, Holidays.MEMORIAL, Holidays.JULY_3, Holidays.JULY_4, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.LABOR_FRI, Holidays.LABOR, Holidays.INDIGENOUS, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_EVE, Holidays.CHRISTMAS, Holidays.NEW_YEAR_EVE)),
                   // reject "Special Events - including Belmont and
                   // Mets-Willets Point trains, US Golf Open or NYC
@@ -267,7 +271,7 @@ window.Transit = (function($, _, window, undefined) {
                   maybe (summer(saturdays)),
                   always
                 )),
-    bidi_system("NJ Transit Trains", conditions(
+    System.bidi("NJ Transit Trains", "train", conditions(
                   // NJT defines "Major Holiday", then includes "the
                   // day prior to a holiday." Do they really mean the
                   // Sunday before Memorial and Labor days?
@@ -277,7 +281,7 @@ window.Transit = (function($, _, window, undefined) {
                   reject(rush_hour([16, 00], [17, 00]), OUTBOUND),
                   always
                 )),
-    trivial_system("NJ Transit Buses", maybe(always))
+    System.trivial("NJ Transit Buses", "bus", maybe(always))
   ],
 
   // allow to quickly get a transit system by its slug
@@ -323,10 +327,10 @@ window.Transit = (function($, _, window, undefined) {
     }
 
     var when = new Date(), avail = system.available(when);
-    $(".result-h").hide();
-    $("#result-" + avail).show();
+    $(".result-h, .result-notes, .method-icon, .result-icon").hide();
+    $(".result-" + avail).show();
+    $("#icon-" + system.icon).show();
 
-    $(".result-notes").hide();
     $("#notes-" + slug).show();
     $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
     $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));

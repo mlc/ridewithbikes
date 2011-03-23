@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <title>Ride with Bikes</title>
     <link rel="stylesheet" href="css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/favicon.ico" />
     <script src="js/modernizr-1.7.min.js" type="text/javascript"></script>
   </head>
   <body>
@@ -23,17 +25,26 @@
                 <option value='' selected>…</option>
               </select>
               at
-              <input id="when" value="now" title="Try 'now', 'tomorrow 7:08 AM', 'last Thursday noon', etc."/>?
+              <input id="when" value="now" title="Try 'now', 'tomorrow 7:08 AM', 'July 4 noon', etc."/>?
             </p>
           </form>
         </div>
         <section id="result">
           <header>
-            <h2 class="result-h" id="result-true">Yes</h2>
-            <h2 class="result-h" id="result-false">No</h2>
-            <h2 class="result-h" id="result-maybe">Maybe</h2>
+            <h2 class="result-h result-true">Yes</h2>
+            <h2 class="result-h result-false">No</h2>
+            <h2 class="result-h result-maybe">Maybe</h2>
             <p id="date-time"></p>
           </header>
+
+          <p id="icons">
+            <img class="icon" id="icon-bike" src="/img/bike.png" width="150" height="90" alt="bike">
+            <img class="icon method-icon" id="icon-train" src="/img/train.png" width="60" height="90" alt="train">
+            <img class="icon method-icon" id="icon-bus" src="/img/bus.png" width="73" height="90" alt="bus">
+            <img class="icon result-icon result-true" id="icon-approve" src="/img/approve.png" width="57" height="90" alt="approve">
+            <img class="icon result-icon result-false" id="icon-disapprove" src="/img/disapprove.png" width="57" height="90" alt="disapprove">
+            <img class="icon result-icon result-maybe" id="icon-question" src="/img/question.png" width="31" height="90" alt="question">
+          </p>
 
           <section class="result-notes" id="notes-nyc-subway">
             <p>You can always take your bike on the subway!</p>
@@ -86,9 +97,9 @@
           <a href="http://twitter.com/share" class="twitter-share-button" data-text="Ride with Bikes: learn if you can take your #bikenyc on public transit" data-count="horizontal" data-related="vermicelli" data-url="http://ridewithbikes.com/">Tweet</a>
         </p>
         <p>This website by <a href="http://mlcastle.net/">mike castleman</a> (<a href="http://twitter.com/vermicelli">@vermicelli</a>). <a href="https://github.com/mlc/ridewithbikes">View the code</a> and <a href="https://github.com/mlc/ridewithbikes/issues">report bugs</a> on GitHub.</p>
-        <p>Data mostly from <a href="http://transalt.org/resources/aboard">Transportation Alternatives</a>. I'll try to keep this accurate and up-to-date, but make no guarantees.</p>
+        <p>Data from <a href="http://transalt.org/resources/aboard">Transportation Alternatives</a> and the transit agencies' websites.</p>
         <p>Inspired by <a href="http://www.stevevance.net/metra/">Can I bring my bike on Metra right now?</a></p>
-        <p>Powered by <a href="http://www.datejs.com/">date.js</a>, <a href="http://html5boilerplate.com/">HTML5 Boilerplate</a>, <a href="http://jquery.org/">jQuery</a>, <a href="http://www.theleagueofmoveabletype.com/fonts/1-junction">Junction</a>, <a href="http://www.modernizr.com/">Modernizr</a>, <a href="http://documentcloud.github.com/underscore/">underscore</a>.</p>
+        <p>Icons from <a href="http://thenounproject.com">The Noun Project</a>. Powered by <a href="http://www.datejs.com/">date.js</a>, <a href="http://html5boilerplate.com/">HTML5 Boilerplate</a>, <a href="http://jquery.org/">jQuery</a>, <a href="http://www.theleagueofmoveabletype.com/fonts/1-junction">Junction</a>, <a href="http://www.modernizr.com/">Modernizr</a>, <a href="http://documentcloud.github.com/underscore/">underscore</a>.</p>
       </footer>
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
