@@ -124,7 +124,7 @@ body {
 
 input#when {
     background-color: #e8f2f3;
-    width: 5em;
+    width: 6em;
 }
 
 .rgba input#when {
@@ -205,6 +205,15 @@ h2#result-h {
     text-transform: uppercase;
 }
 
+#error {
+    display: none;
+}
+#error p {
+    text-align: center;
+}
+#icon-x {
+    vertical-align: middle;
+}
 
 
 

@@ -324,10 +324,16 @@ window.Transit = (function($, _, window, undefined) {
       return memo;
     },
     { }
-  ),
+  );
 
-  PAGE_TITLE = "Ride with Bikes";
   that.Systems = TRANSIT_SYSTEMS_LOOKUP;
+
+  var PAGE_TITLE = "Ride with Bikes";
+
+  var show_error = function(txt) {
+    $("#error-text").text(txt);
+    $("#error").show();
+  };
 
   var setstateforsystem = function(slug, mode) {
     if (!mode)
@@ -366,11 +372,19 @@ window.Transit = (function($, _, window, undefined) {
 
     var system = TRANSIT_SYSTEMS_LOOKUP[slug];
     if (!system) {
-      alert("Error! Unknown system " + slug);
+      show_error("Unknown system " + slug);
       return;
     }
 
-    var when = new Date(), results = system.compute(when), avail;
+    var when = Date.parse($("#when").val());
+    if (!when) {
+      show_error("I don't understand that time.");
+      return;
+    }
+
+    $("#error").hide();
+
+    var results = system.compute(when), avail;
     $(".result-notes, .method-icon, .result-icon").hide();
     $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));
     $("#icon-" + system.icon).show();
@@ -421,6 +435,10 @@ window.Transit = (function($, _, window, undefined) {
     $select.bind("change", function() {
       setstateforsystem($select.val());
     });
+
+    $("#when").bind("keyup change", _.debounce(function() {
+      setsystem($select.val(), false);
+    }, 250));
 
     $(window).bind("statechange", function() {
       var state = History.getState(), system = state.data ? state.data.system : undefined;
