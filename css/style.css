@@ -81,6 +81,10 @@ a:hover { color: #036; }
 
 @font-face {
     font-family: 'Junction';
+    src: url('/otf/junction.eot');
+}
+@font-face {
+    font-family: 'Junction';
     font-style: normal;
     font-weight: normal;
     src: local('Junction'), url('/otf/junction.otf') format('opentype');
