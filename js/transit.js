@@ -432,8 +432,14 @@ window.Transit = (function($, _, window, undefined) {
       $select.append($("<option/>", {text: system.name, value: system.slug}));
     });
 
+    var setsystemonce = _.throttle(function(system) {
+      setsystem(system, true);
+    }, 50);
+
     $select.bind("change", function() {
+      var system = $select.val();
       setstateforsystem($select.val());
+      setsystemonce(system);
     });
 
     $("#when").bind("keyup change", _.debounce(function() {
@@ -443,7 +449,7 @@ window.Transit = (function($, _, window, undefined) {
     $(window).bind("statechange", function() {
       var state = History.getState(), system = state.data ? state.data.system : undefined;
       $select.val(system || '');
-      setsystem(system, true);
+      setsystemonce(system);
     });
 
     History.getState(); // called for its side effects.
