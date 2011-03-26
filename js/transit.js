@@ -337,7 +337,8 @@ window.Transit = (function($, _, window, undefined) {
                   reject(rush_hour([16, 00], [19, 00]), 'outbound'),
                   always
                 )),
-    System.trivial("NJ Transit Buses", "bus", maybe(always))
+    System.trivial("NJ Transit Buses", "bus", maybe(always)),
+    System.trivial("Staten Island Ferry", "ferry", always)
   ];
 
   that.systems = _(TRANSIT_SYSTEMS).foldl(
