@@ -148,14 +148,14 @@ $(function() {
 
   module("Systems");
   test("NYC Transit", function() {
-    var subway = Transit.Systems['nyc-subway'], bus = Transit.Systems['nyc-bus'];
+    var subway = Transit.systems['nyc-subway'], bus = Transit.systems['nyc-bus'];
     ok(subway.available(new Date()), 'subway is always available');
     ok(!bus.available(new Date()), 'bus is never available');
   });
 
   test("PATH", function() {
     expect(8);
-    var path = Transit.Systems.path;
+    var path = Transit.systems.path;
     var check_path = function(date, p, descr) {
       equal(path.available(Date.parse(date)), p, descr || date);
     };
