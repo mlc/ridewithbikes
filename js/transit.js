@@ -200,6 +200,28 @@ window.Transit = (function($, _, window, undefined) {
 
   // this is sort of a type system, but a very simple one.
   var System = (function() {
+    var friendly_string = function(obj) {
+      switch(obj) {
+      case 'true':
+        return 'Yes';
+      case 'false':
+        return 'No';
+      default:
+        return obj;
+      }
+    },
+    summarize_results = function() {
+      if (this.maybe) {
+        if (this['true']) {
+          return this['true'].join(', ') + " ok; maybe " + this['maybe'].join(', ');
+        } else {
+          return "maybe " + this['maybe'].join(', ') + "; " + this['false'].join(', ') + " not ok";
+        }
+      } else {
+        return this['true'].join(', ') + " ok, but not " + this['false'].join(', ');
+      }
+    };
+
     var compute = function(date) {
       var results = this.states(date), groupedresults = {};
       _(results).each(function(k, v) {
@@ -218,6 +240,7 @@ window.Transit = (function($, _, window, undefined) {
         return _(groupedresults).keys()[0];
 
       default:
+        groupedresults.toString = summarize_results;
         return groupedresults;
       }
     };
@@ -249,7 +272,8 @@ window.Transit = (function($, _, window, undefined) {
           };
         };
         return that;
-      }
+      },
+      friendly_string: friendly_string
     };
   }());
 
@@ -347,17 +371,6 @@ window.Transit = (function($, _, window, undefined) {
     }
   };
 
-  var friendlyString = function(obj) {
-    switch(obj) {
-    case 'true':
-      return 'Yes';
-    case 'false':
-      return 'No';
-    default:
-      return obj;
-    }
-  };
-
   var setsystem = function(slug, fade) {
     var $result = $("#result"), $getstarted = $("#getstarted");
     $result.hide();
@@ -397,23 +410,18 @@ window.Transit = (function($, _, window, undefined) {
       if (_(results['true']).include('outbound')) {
           $(".result-outbound").show();
       }
+      $("#result-h").text(results.toString());
       if (results.maybe) {
         $("#" + slug + "-maybe").show();
         $(".result-maybe").show();
-        if (results['true']) {
-          $("#result-h").text(results['true'].join(', ') + " ok; maybe " + results['maybe'].join(', '));
-        } else {
-          $("#result-h").text("maybe " + results['maybe'].join(', ') + "; " + results['false'].join(', ') + " not ok");
-        }
       } else {
         $("#" + slug + "-maybe").hide();
-        $("#result-h").text(results['true'].join(', ') + " ok, but not " + results['false'].join(', '));
       }
     } else {
       // just one status!
       $(".result-" + results).show();
       $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
-      $("#result-h").text(friendlyString(results));
+      $("#result-h").text(System.friendly_string(results));
     }
 
     $getstarted.hide();
