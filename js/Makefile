@@ -11,3 +11,6 @@ scripts.min.js : $(SCRIPTS)
 %.ugly.js : %.js
 	$(UGLIFY) $< > $@
 	echo ';' >> $@
+
+clean :
+	rm -f *.ugly.js

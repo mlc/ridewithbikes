@@ -194,10 +194,6 @@ p {
     margin-bottom: 4ex;
 }
 
-.icon {
-    margin: 0px 1em;
-}
-
 h2#result-h {
     text-align: center;
     font-size: 200%;
@@ -207,13 +203,26 @@ h2#result-h {
 
 #error {
     display: none;
-}
-#error p {
     text-align: center;
+    width: 100%; margin: 0px auto;
 }
-#icon-x {
-    vertical-align: middle;
+#icons { width: 100%; }
+.icon {
+    background: transparent url(/img/sprites.png);
+    margin: 0px 1em;
+    overflow: hidden; display: inline-block; text-indent: -9999px;
 }
+#icon-approve { width: 57px; height: 90px; background-position: 0px 0px; }
+#icon-bike { width: 150px; height: 90px; background-position: -57px 0px; }
+#icon-bus { width: 73px; height: 90px; background-position: -207px 0px; }
+#icon-disapprove { width: 57px; height: 90px; background-position: -280px 0px; }
+#icon-inbound { width: 43px; height: 90px; background-position: -337px 0px; }
+#icon-outbound { width: 43px; height: 90px; background-position: -380px 0px; }
+#icon-question { width: 31px; height: 90px; background-position: -423px 0px; }
+#icon-train { width: 60px; height: 90px; background-position: -454px 0px; }
+#icon-x { width: 24px; height: 28px; background-position: -514px 0px; vertical-align: middle; }
+
+
 
 
 

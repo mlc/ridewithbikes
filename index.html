@@ -38,10 +38,8 @@
           </p>
         </div>
         <section id="error">
-          <p>
-            <img src="/img/x.png" width="24" height="28" id="icon-x">
-            <span id="error-text"></span>
-          </p>
+          <div class="icon" id="icon-x">Error</div>
+          <span id="error-text"></span>
         </section>
         <section id="result">
           <header>
@@ -49,16 +47,16 @@
             <p id="date-time"></p>
           </header>
 
-          <p id="icons">
-            <img class="icon" id="icon-bike" src="/img/bike.png" width="150" height="90" alt="bike">
-            <img class="icon method-icon" id="icon-train" src="/img/train.png" width="60" height="90" alt="train">
-            <img class="icon method-icon" id="icon-bus" src="/img/bus.png" width="73" height="90" alt="bus">
-            <img class="icon result-icon result-true" id="icon-approve" src="/img/approve.png" width="57" height="90" alt="approve">
-            <img class="icon result-icon result-false" id="icon-disapprove" src="/img/disapprove.png" width="57" height="90" alt="disapprove">
-            <img class="icon result-icon result-inbound" id="icon-inbound" src="/img/inbound.png" width="43" height="90" alt="inbound">
-            <img class="icon result-icon result-outbound" id="icon-outbound" src="/img/outbound.png" width="43" height="90" alt="outbound">
-            <img class="icon result-icon result-maybe" id="icon-question" src="/img/question.png" width="31" height="90" alt="question">
-          </p>
+          <div id="icons">
+            <div class="icon" id="icon-bike">bike on</div>
+            <div class="icon method-icon" id="icon-train">train</div>
+            <div class="icon method-icon" id="icon-bus">bus</div>
+            <div class="icon result-icon result-true" id="icon-approve">yes</div>
+            <div class="icon result-icon result-false" id="icon-disapprove">no</div>
+            <div class="icon result-icon result-inbound" id="icon-inbound" >inbound</div>
+            <div class="icon result-icon result-outbound" id="icon-outbound">outbound</div>
+            <div class="icon result-icon result-maybe" id="icon-question">?</div>
+          </div>
 
           <section class="result-notes" id="notes-nyc-subway">
             <p>You can always take your bike on the subway!</p>
