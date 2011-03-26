@@ -147,17 +147,21 @@ $(function() {
   });
 
   module("Systems");
-  test("NYC Transit", function() {
-    var subway = Transit.systems['nyc-subway'], bus = Transit.systems['nyc-bus'];
+
+  // some systems do not depend on the time of day.
+  test("Trivial systems", function() {
+    var subway = Transit.systems['nyc-subway'], bus = Transit.systems['nyc-bus'], njbus = Transit.systems['nj-transit-buses'];
     ok(subway.available(new Date()), 'subway is always available');
     ok(!bus.available(new Date()), 'bus is never available');
+    equal(njbus.compute(new Date()), 'maybe', 'NJT bus is unpredictable');
   });
 
+  // PATH is the simplest nontrivial system.
   test("PATH", function() {
     expect(8);
     var path = Transit.systems.path;
     var check_path = function(date, p, descr) {
-      equal(path.available(Date.parse(date)), p, descr || date);
+      equal(path.compute(Date.parse(date)), String(p), descr || date);
     };
     equal(path.name, "PATH", "name");
     equal(path.slug, "path", "slug");
@@ -167,5 +171,66 @@ $(function() {
     check_path("March 22, 2011 5:30 PM", false);
     check_path("March 22, 2011 9:30 PM", true);
     check_path("May 30, 2011 7:30 AM", true, "memorial day");
+  });
+
+  var ONLY_INBOUND = "inbound ok, but not outbound",
+      ONLY_OUTBOUND = "outbound ok, but not inbound";
+
+  // Metro-North is all kinds of strange.
+  test("Metro-North", function() {
+    var mnr = Transit.systems["metro-north"],
+    check = function(date, p, descr) {
+      equal(mnr.compute(Date.parse(date)).toString().toLowerCase(), p.toString(), descr || date);
+    };
+    check("Mar 29, 2011 12:00 PM", true);
+    check("Mar 29, 2011 6:00 PM", ONLY_INBOUND, "pm rush");
+    _(["8:12 PM", "3:32 PM"]).each(function(t) {
+      check("Mar 29, 2011 " + t, "inbound ok; maybe outbound", t);
+    });
+    check("Mar 29, 2011 8:20 PM", true, "normal 8:20pm");
+    check("Nov 25, 2011 3:13 PM", ONLY_INBOUND, "post-thanksgiving");
+    check("Dec 29, 2011 8:20 PM", ONLY_INBOUND, "post-xmas 8:20pm");
+    check("Mar 29, 2011 5:15 AM", ONLY_OUTBOUND, "early am rush");
+    check("Mar 29, 2011 6:17 AM", "maybe outbound; inbound not ok", "bidi am rush");
+    check("Mar 29, 2011 9:15 AM", ONLY_OUTBOUND, "late am rush");
+    check("Nov 25, 2011 6:00 PM", false, "post-thanksgiving pm rush");
+    check("Mar 29, 2011 11:00 AM", true, "late am");
+    check("Nov 25, 2011 11:00 AM", false, "post-thanksgiving late am");
+    check("Mar 17, 2011 12:00 PM", false, "holiday");
+    check("Mar 29, 2011 12:30 PM", true, "normal early afternoon");
+    check("May 27, 2011 12:30 PM", ONLY_INBOUND, "fri before memorial day early afternoon");
+    check("May 27, 2011 11:30 AM", true, "fri before memorial day 11:30a");
+    check("Mar 26, 2011 6:00 PM", true, "weekend");
+  });
+
+  // omg who comes up with this shit?
+  test("Long Island RR", function() {
+    var lirr = Transit.systems["long-island-rail-road"],
+    check = function(date, p, descr) {
+      equal(lirr.compute(Date.parse(date)).toString().toLowerCase(), p.toString(), descr + " — " + date);
+    };
+
+    equal(lirr.name, "Long Island Rail Road", "weird name spelling");
+    check("Mar 29, 2011 12:00 PM", true, "mid-day");
+    check("Mar 29, 2011 6:30 AM", ONLY_OUTBOUND, "am rush");
+    check("Mar 29, 2011 8:00 AM", ONLY_OUTBOUND, "am rush");
+    check("Mar 29, 2011 5:00 PM", ONLY_INBOUND, "pm rush");
+    check("Mar 29, 2011 7:00 PM", ONLY_INBOUND, "pm rush");
+    check("Mar 26, 2011 6:30 AM", true, "sat early am");
+    check("Mar 26, 2011 8:00 AM", ONLY_OUTBOUND, "sat am rush");
+    check("Mar 26, 2011 5:00 PM", ONLY_INBOUND, "sat pm rush");
+    check("Mar 26, 2011 7:00 PM", true, "sat pm ok");
+    check("Mar 27, 2011 8:00 AM", true, "sunday morning");
+    check("Mar 27, 2011 7:00 PM", ONLY_OUTBOUND, "sun weridness");
+    check("Mar 27, 2011 9:00 PM", true, "sunday");
+    check("Mar 27, 2011 11:00 PM", ONLY_INBOUND, "sun weridness");
+    check("Jun 19, 2011 9:00 PM", "outbound ok; maybe inbound", "montauk summer sun");
+    check("Jun 19, 2011 7:00 PM", ONLY_OUTBOUND, "montauk summer sun"); // right?
+    check("Mar 25, 2011 8:30 PM", true, "normal fri");
+    check("Jun 17, 2011 8:30 PM", "inbound ok; maybe outbound", "montauk summer fri");
+    check("Jun 18, 2011 12:00 PM", "maybe", "montauk summer sat");
+    check("Jun 18, 2011 8:00 AM", "maybe outbound; inbound not ok", "montauk summer sat am");
+    check("Jun 18, 2011 5:00 PM", "maybe inbound; outbound not ok", "montauk summer sat pm");
+    check("May 8, 2011 12:00 PM", false, "mother's day");
   });
 });

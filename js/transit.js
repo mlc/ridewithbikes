@@ -322,8 +322,8 @@ window.Transit = (function($, _, window, undefined) {
                   reject(rush_hour([16, 00], [18, 00], saturdays), 'outbound'),
                   reject(rush_hour([17, 00], [20, 00], sundays),   'inbound'),
                   reject(rush_hour([22, 00], [24, 00], sundays),   'outbound'),
-                  maybe (rush_hour([18, 00], [22, 00], summer(sundays), 'inbound')),
-                  maybe (rush_hour([15, 00], [21, 00], summer(fridays), 'outbound')),
+                  maybe (rush_hour([18, 00], [22, 00], summer(sundays)), 'inbound'),
+                  maybe (rush_hour([15, 00], [21, 00], summer(fridays)), 'outbound'),
                   maybe (summer(saturdays)),
                   always
                 )),
