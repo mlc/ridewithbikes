@@ -452,6 +452,10 @@ window.Transit = (function($, _, window, undefined) {
       setsystemonce(system);
     });
 
+    if (!_(["EST", "EDT"]).include(new Date().getTimezone())) {
+      $("#wrongtimezone").removeClass("hidden");
+    }
+
     History.getState(); // called for its side effects.
   });
 
