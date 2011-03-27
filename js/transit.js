@@ -208,34 +208,23 @@ String.prototype.slugify = function() {
       } else {
         return this['true'].join(', ') + " ok, but not " + this['false'].join(', ');
       }
-    };
-
-    var compute = function(date) {
-      var that = this;
-      var results = {}, groupedresults = {};
-      _(this.states).each(function(state) {
-        results[state] = that.available(date, state);
-      });
-      _(results).each(function(k, v) {
-        if (_.isArray(groupedresults[k])) {
-          groupedresults[k].push(v);
-        } else {
-          groupedresults[k] = [v];
+    },
+    summarize_table = function(table) {
+      var result = [], i, len = table.length, memo = table[0];
+      if (len === 0)
+        return [];
+      for (i = 1; i < len; ++i) {
+        if (!_.isEqual(memo.slice(1), table[i].slice(1))) {
+          result.push([memo[0] + ' \u2013 ' + table[i][0]].concat(memo.slice(1)));
+          memo = table[i];
         }
-      });
-
-      switch(_(groupedresults).size()) {
-      case 0:
-        throw 'wtf? no results?';
-        break;
-      case 1:
-        return _(groupedresults).keys()[0];
-
-      default:
-        groupedresults.toString = summarize_results;
-        return groupedresults;
       }
+      result.push([memo[0] + ' \u2013 midnight'].concat(memo.slice(1)));
+      if (result.length === 1)
+        result[0][0] = "all day";
+      return result;
     };
+
 
     var base_sys = function(name, icon, f) {
       return {
@@ -243,7 +232,46 @@ String.prototype.slugify = function() {
         available: f,
         icon: icon,
         slug: name.slugify(),
-        compute: compute
+        compute: function(date) {
+          var that = this;
+          var results = {}, groupedresults = {};
+          _(this.states).each(function(state) {
+            results[state] = that.available(date, state);
+          });
+          _(results).each(function(k, v) {
+            if (_.isArray(groupedresults[k])) {
+              groupedresults[k].push(v);
+            } else {
+              groupedresults[k] = [v];
+            }
+          });
+
+          switch(_(groupedresults).size()) {
+          case 0:
+            throw 'wtf? no results?';
+            break;
+          case 1:
+            return _(groupedresults).keys()[0];
+
+          default:
+            groupedresults.toString = summarize_results;
+            return groupedresults;
+          }
+        },
+        table: function(date) {
+          var d = date.clone(), i, result = [], that = this, row;
+          d.clearTime(); // set to midnight.
+          for (i = 0; i < 24*4; ++i, d.addMinutes(15)) {
+            row = _(that.states).map(function(state) { return that.available(d, state); });
+            row.unshift(d.toString('t'));
+            result.push(row);
+          }
+
+          return result;
+        },
+        friendly_table: function(date) {
+          return summarize_table(this.table(date));
+        }
       };
     };
 
@@ -258,7 +286,8 @@ String.prototype.slugify = function() {
         that.states = ['inbound', 'outbound'];
         return that;
       },
-      friendly_string: friendly_string
+      friendly_string: friendly_string,
+      summarize: summarize_table
     };
   }());
   that.System = System;

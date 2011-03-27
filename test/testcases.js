@@ -233,4 +233,59 @@ $(function() {
     check("Jun 18, 2011 5:00 PM", "maybe inbound; outbound not ok", "montauk summer sat pm");
     check("May 8, 2011 12:00 PM", false, "mother's day");
   });
+
+  module("Full Day");
+  test("Summarize", function() {
+    var summarize = Transit.System.summarize;
+    deepEqual(summarize([]), [], "empty");
+    deepEqual(summarize([["12:00 AM", 1, true, '3'],
+                         ["3:00 PM", 1, true, '3'],
+                         ["6:00 PM", 1, true, '3']]),
+              [["all day", 1, true, '3']], "all day");
+    deepEqual(summarize([["12:00 AM", 9],
+                         ["12:15 AM", 9],
+                         ["12:30 AM", 10],
+                         ["12:45 AM", 10],
+                         ["1:00 AM", 11]]),
+              [["12:00 AM – 12:30 AM", 9],
+               ["12:30 AM – 1:00 AM", 10],
+               ["1:00 AM – midnight", 11]],
+              "a few cases");
+  });
+
+  test("Table Quick Checks", function() {
+    var mnr = Transit.systems["metro-north"], path = Transit.systems["path"];
+    equal(path.table(new Date()).length, 24*4, "path returns the proper amount of results");
+    equal(mnr.table(new Date()).length, 24*4, "mnr returns the proper amount of results");
+    ok(_(path.table(new Date())).all(function(row) {return row.length === 2;}), "path has two-elt lists");
+    ok(_(mnr.table(new Date())).all(function(row) {return row.length === 3;}), "mnr has three-elt lists");
+  });
+
+  test("Actual Checks", function() {
+    var nyct = Transit.systems["nyc-subway"], path = Transit.systems["path"], mnr = Transit.systems["metro-north"];
+    deepEqual(nyct.friendly_table(new Date()),
+              [["all day", true]],
+              "nyc subway: all day true");
+    deepEqual(path.friendly_table(new Date("Mar 27, 2011")),
+              [["all day", true]],
+              "path weekend: all day true");
+    deepEqual(path.friendly_table(new Date("Mar 28, 2011")),
+              [["12:00 AM – 6:30 AM", true],
+               ["6:30 AM – 9:30 AM", false],
+               ["9:30 AM – 3:30 PM", true],
+               ["3:30 PM – 6:30 PM", false],
+               ["6:30 PM – midnight", true]],
+              "path weekday");
+    deepEqual(mnr.friendly_table(new Date("Mar 28, 2011")),
+             [["12:00 AM – 5:00 AM", true, true],
+              ["5:00 AM – 5:30 AM", false, true],
+              ["5:30 AM – 9:00 AM", false, "maybe"],
+              ["9:00 AM – 10:00 AM", false, true],
+              ["10:00 AM – 3:00 PM", true, true],
+              ["3:00 PM – 4:00 PM", true, "maybe"],
+              ["4:00 PM – 8:00 PM", true, false],
+              ["8:00 PM – 8:15 PM", true, "maybe"],
+              ["8:15 PM – midnight", true, true]],
+             "metro-north weekday");
+  });
 });
