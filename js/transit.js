@@ -211,7 +211,11 @@ String.prototype.slugify = function() {
     };
 
     var compute = function(date) {
-      var results = this.states(date), groupedresults = {};
+      var that = this;
+      var results = {}, groupedresults = {};
+      _(this.states).each(function(state) {
+        results[state] = that.available(date, state);
+      });
       _(results).each(function(k, v) {
         if (_.isArray(groupedresults[k])) {
           groupedresults[k].push(v);
@@ -246,19 +250,12 @@ String.prototype.slugify = function() {
     return {
       trivial: function() {
         var that = base_sys.apply(this, arguments);
-        that.states = function(date) {
-          return { all: this.available(date) };
-        };
+        that.states = ['all'];
         return that;
       },
       bidi: function() {
         var that = base_sys.apply(this, arguments);
-        that.states = function(date) {
-          return {
-            inbound: this.available(date, 'inbound'),
-            outbound: this.available(date, 'outbound')
-          };
-        };
+        that.states = ['inbound', 'outbound'];
         return that;
       },
       friendly_string: friendly_string
