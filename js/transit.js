@@ -10,31 +10,21 @@ window.Transit = (function($, _, window, undefined) {
   var that = {};
 
   // some functions which return functions, hooray.
-  // reject, accept, maybe are similar enough that we could probably DRY them
-  var reject = function(condition, fdir) {
-    return (function(date, direction) {
-      if ((!fdir || direction == fdir) && condition(date))
-        return false;
-      else
-        return undefined;
-    });
+  // awesomely, checker is a function which returns a function which itself
+  // returns a function. (currying, anyone?)
+  var checker = function(result) {
+    return function(condition, fdir) {
+      return function(date, direction) {
+        if ((!fdir || direction == fdir) && condition(date))
+          return result;
+        else
+          return undefined;
+      };
+    };
   },
-  accept = function(condition, fdir) {
-    return (function(date, direction) {
-      if ((!fdir || direction == fdir) && condition(date))
-        return true;
-      else
-        return undefined;
-    });
-  },
-  maybe = function(condition, fdir) {
-    return (function(date, direction) {
-      if ((!fdir || direction == fdir) && condition(date))
-        return 'maybe';
-      else
-        return undefined;
-    });
-  },
+  reject = checker(false),
+  accept = checker(true),
+  maybe  = checker('maybe'),
   conditions = function() {
     var funs = Array.prototype.slice.call(arguments), len = funs.length;
     return function(date, direction) {
