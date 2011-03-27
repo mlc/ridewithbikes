@@ -51,6 +51,7 @@
     $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));
     $("#icon-" + system.icon).show();
     $("#notes-" + slug).show();
+    $("#result-h").text(Transit.System.friendly_string(results));
 
     if (typeof results === 'object') {
       if (_(results['true']).include('inbound')) {
@@ -59,7 +60,6 @@
       if (_(results['true']).include('outbound')) {
           $(".result-outbound").show();
       }
-      $("#result-h").text(results.toString());
       if (results.maybe) {
         $("#" + slug + "-maybe").show();
         $(".result-maybe").show();
@@ -70,7 +70,6 @@
       // just one status!
       $(".result-" + results).show();
       $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
-      $("#result-h").text(Transit.System.friendly_string(results));
     }
 
     $getstarted.hide();

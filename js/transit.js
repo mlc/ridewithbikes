@@ -195,7 +195,7 @@ String.prototype.slugify = function() {
       case 'false':
         return 'No';
       default:
-        return obj;
+        return obj.toString();
       }
     },
     summarize_results = function() {
