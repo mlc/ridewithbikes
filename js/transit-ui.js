@@ -1,4 +1,4 @@
-(function($, _, undefined) {
+(function($, _, window, undefined) {
   var History = window.History, Transit = window.Transit;
 
   var PAGE_TITLE = "Ride with Bikes";
@@ -115,4 +115,4 @@
 
     History.getState(); // called for its side effects.
   });
-}(jQuery, _));
+}(jQuery, _, this));
