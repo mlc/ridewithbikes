@@ -45,6 +45,7 @@
           <header>
             <h2 id="result-h"></h2>
             <p id="date-time"></p>
+            <p id="whole-day-btn-p"><button id="whole-day-btn" type="button">Show Whole Day</button></p>
           </header>
 
           <div id="icons">
@@ -58,6 +59,15 @@
             <div class="icon result-icon result-outbound" id="icon-outbound">outbound</div>
             <div class="icon result-icon result-maybe" id="icon-question">?</div>
           </div>
+
+          <table class="hidden" id="whole-day-table">
+            <thead>
+              <tr><th>&nbsp;</th><th>inbound</th><th>outbound</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>&nbsp;</th></tr>
+            </tbody>
+          </table>
 
           <section class="result-notes" id="notes-nyc-subway">
             <p>You can always take your bike on the subway!</p>

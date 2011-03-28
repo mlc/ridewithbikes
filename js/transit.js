@@ -191,8 +191,10 @@ String.prototype.slugify = function() {
     var friendly_string = function(obj) {
       switch(obj) {
       case 'true':
+      case true:
         return 'Yes';
       case 'false':
+      case false:
         return 'No';
       default:
         return obj.toString();
@@ -279,11 +281,13 @@ String.prototype.slugify = function() {
       trivial: function() {
         var that = base_sys.apply(this, arguments);
         that.states = ['all'];
+        that.show_whole_day = !arguments[3];
         return that;
       },
       bidi: function() {
         var that = base_sys.apply(this, arguments);
         that.states = ['inbound', 'outbound'];
+        that.show_whole_day = true;
         return that;
       },
       friendly_string: friendly_string,
@@ -294,9 +298,9 @@ String.prototype.slugify = function() {
 
   // OK! Define the systems we know about
   var TRANSIT_SYSTEMS = [
-    System.trivial("NYC Subway", "train", always),
-    System.trivial("NYC Bus", "bus", never),
-    System.trivial("Amtrak", "train", never),
+    System.trivial("NYC Subway", "train", always, true),
+    System.trivial("NYC Bus", "bus", never, true),
+    System.trivial("Amtrak", "train", never, true),
     System.trivial("PATH", "train", conditions(
                      accept(weekend),
                      // transalt says ok on holidays. path website is unclear.
@@ -353,8 +357,8 @@ String.prototype.slugify = function() {
                   reject(rush_hour([16, 00], [19, 00]), 'outbound'),
                   always
                 )),
-    System.trivial("NJ Transit Buses", "bus", maybe(always)),
-    System.trivial("Staten Island Ferry", "ferry", always)
+    System.trivial("NJ Transit Buses", "bus", maybe(always), true),
+    System.trivial("Staten Island Ferry", "ferry", always, true)
   ];
 
   that.systems = _(TRANSIT_SYSTEMS).foldl(

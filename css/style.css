@@ -223,7 +223,19 @@ h2#result-h {
 #icon-x { width: 24px; height: 28px; background-position: -514px 0px; vertical-align: middle; }
 #icon-ferry { width: 131px; height: 90px; background-position: -538px 0px; }
 
-
+#whole-day-table {
+    margin: 2ex auto;
+}
+#whole-day-table th, #whole-day-table td {
+    text-align: center;
+    padding: 1px 1em;
+}
+#whole-day-table tbody tr {
+    border-top: 1px solid black;
+}
+#whole-day-table tbody {
+    border-bottom: 1px solid black;
+}
 
 
 

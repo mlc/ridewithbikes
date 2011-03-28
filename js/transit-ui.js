@@ -48,11 +48,13 @@
 
     var results = system.compute(when), avail;
     $(".result-notes, .method-icon, .result-icon").hide();
-    $("#date-time").text("at " + when.toString('m') + ', ' + when.toString('t'));
+    $("#result-h").text(Transit.System.friendly_string(results));
+    $("#date-time").show().text("at " + when.toString('m') + ', ' + when.toString('t'));
+    $("#whole-day-btn-p").toggle(system.show_whole_day);
     $("#icon-" + system.icon).show();
     $("#notes-" + slug).show();
-    $("#result-h").text(Transit.System.friendly_string(results));
-
+    $("#whole-day-table").addClass("hidden");
+ 
     if (typeof results === 'object') {
       if (_(results['true']).include('inbound')) {
           $(".result-inbound").show();
@@ -69,7 +71,7 @@
     } else {
       // just one status!
       $(".result-" + results).show();
-      $("#" + slug + "-maybe")[avail === 'maybe' ? 'show' : 'hide']();
+      $("#" + slug + "-maybe").toggle(avail === 'maybe');
     }
 
     $getstarted.hide();
@@ -78,6 +80,27 @@
     } else {
       $result.show();
     }
+  };
+
+  var show_table = function(slug) {
+    var system = Transit.systems[slug],
+    date = Date.parse($("#when").val()),
+    $table = $("#whole-day-table"),
+    data = system.friendly_table(date),
+    tbody;
+
+    $("#date-time, #whole-day-btn-p, .result-icon").hide();
+    $("#result-h").text(date.toString('D'));
+    $table.find("thead tr").toggle(data[0].length > 2);
+    tbody = $table.find("tbody").empty();
+    _(data).each(function(row) {
+      var tr = $("<tr>");
+      _(row).each(function(str) {
+        tr.append($("<td>", {text: Transit.System.friendly_string(str)}));
+      });
+      tbody.append(tr);
+    });
+    $table.removeClass('hidden');
   };
 
   $(function() {
@@ -98,7 +121,7 @@
       setsystemonce(system);
     });
 
-    $("#when").bind("keyup change", _.debounce(function() {
+    $("#when").bind("keyup", _.debounce(function() {
       setsystem($select.val(), false);
     }, 250));
 
@@ -106,6 +129,10 @@
       var state = History.getState(), system = state.data ? state.data.system : undefined;
       $select.val(system || '');
       setsystemonce(system);
+    });
+
+    $("#whole-day-btn").click(function() {
+      show_table($select.val());
     });
 
     if (!_(["EST", "EDT"]).include(new Date().getTimezone())) {
