@@ -81,13 +81,13 @@ a:hover { color: #036; }
 
 @font-face {
     font-family: 'Junction';
-    src: url('/otf/junction.eot');
-}
-@font-face {
-    font-family: 'Junction';
-    font-style: normal;
+    src: url('/otf/junction_02-webfont.eot');
+    src: url('/otf/junction_02-webfont.eot?iefix') format('eot'),
+         url('/otf/junction_02-webfont.woff') format('woff'),
+         url('/otf/junction_02-webfont.ttf') format('truetype'),
+         url('/otf/junction_02-webfont.svg#webfontEtYdzEGe') format('svg');
     font-weight: normal;
-    src: local('Junction'), url('/otf/junction.otf') format('opentype');
+    font-style: normal;
 }
 
 body, select, input {
