@@ -1,3 +1,4 @@
+// see transit.js for copyright and license information.
 (function($, _, window, undefined) {
   var History = window.History, Transit = window.Transit;
 

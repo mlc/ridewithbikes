@@ -9,6 +9,9 @@ the server; everything is done on the client with Javascript.
 
 There are some unit tests (with [QUnit]) in the `test` subdirectory.
 
+See the COPYING file for details on the various works incorporated
+into this site.
+
 If you're still reading this and have any questions, get in touch.
 
 
