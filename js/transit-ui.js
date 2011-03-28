@@ -136,6 +136,10 @@
       show_table($select.val());
     });
 
+    $("form").submit(function(evt) {
+      evt.preventDefault();
+    });
+
     if (!_(["EST", "EDT"]).include(new Date().getTimezone())) {
       $("#wrongtimezone").removeClass("hidden");
     }
