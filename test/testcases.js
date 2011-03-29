@@ -80,6 +80,14 @@ $(function() {
     check_holiday('EREV_ROSH', "Sep 16, 2012", true);
   });
 
+  test("Weekday before July 4", function() {
+    check_holiday('JULY_3_LIRR', 'Jun 3, 2011', false);
+    check_holiday('JULY_3_LIRR', 'Jul 1, 2011', true);
+    check_holiday('JULY_3_LIRR', 'Jul 3, 2011', false);
+    check_holiday('JULY_3_LIRR', 'Jul 1, 2012', false);
+    check_holiday('JULY_3_LIRR', 'Jul 3, 2012', true);
+    check_holiday('JULY_3_LIRR', 'Jul 2, 2021', true);
+  });
 
   module("Conditions");
   var Conditions = Transit.Conditions;

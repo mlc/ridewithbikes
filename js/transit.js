@@ -101,8 +101,8 @@ String.prototype.slugify = function() {
       JULY_3:           month_day(Date.JULY, 3),
       // "the weekday before Independence Day".
       JULY_3_LIRR:      function(d) {
-        var month = d.getMonth(), day = date.getDate();
-        return (month === Date.JULY) && ((day === 3 && d.is().weekday()) || (day < 4 && d.is.friday()));
+        var month = d.getMonth(), day = d.getDate();
+        return (month === Date.JULY) && ((day === 3 && d.is().weekday()) || (day < 4 && d.is().friday()));
       },
       JULY_4:           month_day(Date.JULY, 4),
       LABOR_FRI:        month_week_dow(Date.SEPTEMBER, 1, Date.FRIDAY, -3),
