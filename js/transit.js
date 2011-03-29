@@ -98,8 +98,12 @@ String.prototype.slugify = function() {
       MEMORIAL_FRI:     month_week_dow(Date.MAY, -1, Date.FRIDAY, -3),
       MEMORIAL:         month_week_dow(Date.MAY, -1, Date.MONDAY),
       // MNR says "the day or weekend before Independence Day". WTF?
-      // BUG: LIRR says "the weekday before Independence Day".
       JULY_3:           month_day(Date.JULY, 3),
+      // "the weekday before Independence Day".
+      JULY_3_LIRR:      function(d) {
+        var month = d.getMonth(), day = date.getDate();
+        return (month === Date.JULY) && ((day === 3 && d.is().weekday()) || (day < 4 && d.is.friday()));
+      },
       JULY_4:           month_day(Date.JULY, 4),
       LABOR_FRI:        month_week_dow(Date.SEPTEMBER, 1, Date.FRIDAY, -3),
       LABOR:            month_week_dow(Date.SEPTEMBER, 1, Date.MONDAY),
@@ -337,7 +341,7 @@ String.prototype.slugify = function() {
                   always
                 )),
     System.bidi("Long Island Rail Road", "train", conditions(
-                  reject(holiday(Holidays.NEW_YEAR, Holidays.ST_PATRICK, Holidays.MOTHER, Holidays.GOOD_FRIDAY, Holidays.EASTER, Holidays.MEMORIAL_FRI, Holidays.MEMORIAL, Holidays.JULY_3, Holidays.JULY_4, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.LABOR_FRI, Holidays.LABOR, Holidays.INDIGENOUS, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_EVE, Holidays.CHRISTMAS, Holidays.NEW_YEAR_EVE)),
+                  reject(holiday(Holidays.NEW_YEAR, Holidays.ST_PATRICK, Holidays.MOTHER, Holidays.GOOD_FRIDAY, Holidays.EASTER, Holidays.MEMORIAL_FRI, Holidays.MEMORIAL, Holidays.JULY_3_LIRR, Holidays.JULY_4, Holidays.EREV_ROSH, Holidays.EREV_YOM, Holidays.LABOR_FRI, Holidays.LABOR, Holidays.INDIGENOUS, Holidays.THANKSGIVING_EVE, Holidays.THANKSGIVING, Holidays.THANKSGIVING_FRI, Holidays.CHRISTMAS_EVE, Holidays.CHRISTMAS, Holidays.NEW_YEAR_EVE)),
                   // reject "Special Events - including Belmont and
                   // Mets-Willets Point trains, US Golf Open or NYC
                   // parade day trains, the 'Montauk Century' and the
