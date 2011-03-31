@@ -14,7 +14,7 @@ String.prototype.slugify = function() {
   return this.toLowerCase().replace(/[^A-Z0-9]+/gi, '-');
 };
 
-(function($, _, window, undefined) {
+(function(_, window, undefined) {
   var that = {};
 
   // some functions which return functions, hooray.
@@ -383,4 +383,4 @@ String.prototype.slugify = function() {
   );
 
   window.Transit = that;
-})(jQuery, _, this);
+})(_, this);
