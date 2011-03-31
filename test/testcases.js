@@ -169,7 +169,7 @@ $(function() {
     expect(8);
     var path = Transit.systems.path;
     var check_path = function(date, p, descr) {
-      equal(path.compute(Date.parse(date)), String(p), descr || date);
+      equal(path.compute(Date.parse(date)), p, descr || date);
     };
     equal(path.name, "PATH", "name");
     equal(path.slug, "path", "slug");

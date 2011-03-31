@@ -246,7 +246,36 @@ String.prototype.slugify = function() {
         available: f,
         icon: icon,
         slug: name.slugify(),
-        compute: function(date) {
+        table: function(date) {
+          var d = date.clone(), i, result = [], that = this, row;
+          d.clearTime(); // set to midnight.
+          for (i = 0; i < 24*4; ++i, d.addMinutes(15)) {
+            row = _(that.states).map(function(state) { return that.available(d, state); });
+            row.unshift(d.toString('t'));
+            result.push(row);
+          }
+
+          return result;
+        },
+        friendly_table: function(date) {
+          return summarize_table(this.table(date));
+        }
+      };
+    };
+
+    return {
+      trivial: function() {
+        var that = base_sys.apply(this, arguments);
+        that.states = ['all'];
+        that.show_whole_day = !arguments[3];
+        that.compute = that.available;
+        return that;
+      },
+      bidi: function() {
+        var that = base_sys.apply(this, arguments);
+        that.states = ['inbound', 'outbound'];
+        that.show_whole_day = true;
+        that.compute = function(date) {
           var that = this;
           var results = {}, groupedresults = {};
           _(this.states).each(function(state) {
@@ -271,35 +300,7 @@ String.prototype.slugify = function() {
             groupedresults.toString = summarize_results;
             return groupedresults;
           }
-        },
-        table: function(date) {
-          var d = date.clone(), i, result = [], that = this, row;
-          d.clearTime(); // set to midnight.
-          for (i = 0; i < 24*4; ++i, d.addMinutes(15)) {
-            row = _(that.states).map(function(state) { return that.available(d, state); });
-            row.unshift(d.toString('t'));
-            result.push(row);
-          }
-
-          return result;
-        },
-        friendly_table: function(date) {
-          return summarize_table(this.table(date));
-        }
-      };
-    };
-
-    return {
-      trivial: function() {
-        var that = base_sys.apply(this, arguments);
-        that.states = ['all'];
-        that.show_whole_day = !arguments[3];
-        return that;
-      },
-      bidi: function() {
-        var that = base_sys.apply(this, arguments);
-        that.states = ['inbound', 'outbound'];
-        that.show_whole_day = true;
+        };
         return that;
       },
       friendly_string: friendly_string,
