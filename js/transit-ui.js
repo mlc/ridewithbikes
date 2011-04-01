@@ -140,6 +140,11 @@
       evt.preventDefault();
     });
 
+    $("a.change-system").click(function(evt) {
+      setsystem($(this).data("system"), true);
+      evt.preventDefault();
+    });
+
     if (!_(["EST", "EDT"]).include(new Date().getTimezone())) {
       $("#wrongtimezone").removeClass("hidden");
     }
