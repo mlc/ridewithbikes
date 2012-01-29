@@ -76,6 +76,7 @@
     }
 
     $getstarted.hide();
+    $("#androidapp").hide();
     if (fade) {
       $result.fadeIn('slow');
     } else {
