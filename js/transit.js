@@ -176,8 +176,7 @@ String.prototype.slugify = function() {
       dow = date.getDay();
 
       if (month === Date.MAY) {
-        dow = dow || 7;
-        return (day - dow) >= 24;
+        return day >= (dow+2)%7 + 22;
       } else { /* must be September */
         cutoff = dow - 1;
         if (cutoff <= 0)
