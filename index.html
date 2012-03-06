@@ -141,14 +141,19 @@
       Modernizr.json || document.write('\x3cscript src="js/json2.js"\x3e\x3c/script\x3e');
     </script>
     <script src="js/scripts.min.js"></script>
-    <script>
-      var _gaq = [['_setAccount', 'UA-22213633-1'], ['_trackPageview']];
+    <script type="text/javascript">
+      var _gauges = _gauges || [];
       (function(d, t) {
         var s = d.getElementsByTagName(t)[0];
-        _(['http://www.google-analytics.com/ga.js', 'http://platform.twitter.com/widgets.js', 'http://api.flattr.com/js/0.6/load.js?mode=auto']).each(function(u) {
+        _(['//secure.gaug.es/track.js', 'http://platform.twitter.com/widgets.js', 'http://api.flattr.com/js/0.6/load.js?mode=auto']).each(function(u, i) {
           var g = d.createElement(t);
-          g.async = 'async';
+          g.type = 'text/javascript';
           g.src = u;
+          g.async = 'async';
+          if (i == 0) {
+            g.id = 'gauges-tracker';
+            g.setAttribute('data-site-id', '4f5572c5613f5d4ec700009e');
+          }
           s.parentNode.insertBefore(g, s);
         });
       }(document, 'script'));
