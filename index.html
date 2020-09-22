@@ -125,10 +125,6 @@
         </section>
       </div>
       <footer>
-        <p>
-          <a href="http://twitter.com/share" class="twitter-share-button" data-text="Ride with Bikes: learn if you can take your bike on nyc public transit. #bikenyc" data-count="horizontal" data-related="vermicelli" data-url="http://ridewithbikes.com/">Tweet</a>
-          <a class="FlattrButton" style="display:none;" href="http://ridewithbikes.com/" data-flattr-button="compact" data-flattr-uid="mlc"></a>
-        </p>
         <p>This website by <a href="http://mlcastle.net/">mike castleman</a> (<a href="http://twitter.com/vermicelli">@vermicelli</a>). <a href="https://github.com/mlc/ridewithbikes">View the code</a> and <a href="https://github.com/mlc/ridewithbikes/issues">report bugs</a> on GitHub.</p>
         <p>Data from <a href="http://transalt.org/resources/aboard">Transportation Alternatives</a> and the transit agencies' websites.</p>
         <p>Inspired by <a href="http://www.stevevance.net/metra/">Can I bring my bike on Metra right now?</a></p>
@@ -141,22 +137,7 @@
       Modernizr.json || document.write('\x3cscript src="js/json2.js"\x3e\x3c/script\x3e');
     </script>
     <script src="js/scripts.min.js"></script>
-    <script type="text/javascript">
-      var _gauges = _gauges || [];
-      (function(d, t) {
-        var s = d.getElementsByTagName(t)[0];
-        _(['//secure.gaug.es/track.js', 'http://platform.twitter.com/widgets.js', 'http://api.flattr.com/js/0.6/load.js?mode=auto']).each(function(u, i) {
-          var g = d.createElement(t);
-          g.type = 'text/javascript';
-          g.src = u;
-          g.async = 'async';
-          if (i == 0) {
-            g.id = 'gauges-tracker';
-            g.setAttribute('data-site-id', '4f5572c5613f5d4ec700009e');
-          }
-          s.parentNode.insertBefore(g, s);
-        });
-      }(document, 'script'));
-    </script>
+    <script async defer src="https://a.mlcastle.net/latest.js"></script>
+    <noscript><img src="https://a.mlcastle.net/noscript.gif" alt=""/></noscript>
   </body>
 </html>
