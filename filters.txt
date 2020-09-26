@@ -1,0 +1,9 @@
+- .git/**
+- .idea/**
+- filters.txt
++ js/scripts.min.js
++ js/json2.js
++ js/jquery-1.5.1.min.js
++ js/modernizr-1.7.min.js
+- js/*
+- Makefile
